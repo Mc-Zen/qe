@@ -11,6 +11,12 @@ Here we start gathering some useful classes and algorithms for computing quantum
 - **Pauli**. 
 
 
+## Installation/Setup
+
+The project uses CMake and can be built without any dependencies or integration into other projects. 
+However, it can also be integrated as a submodule into another CMake-based project. 
+This will prevent this library's `CMakeLists.txt` file to search for Catch2 (see below), to enable `USE_FOLDERS` and to remove the option for unit testing which will then need to be given by the top-level project. 
+
 
 ## Tests
 
