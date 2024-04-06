@@ -1,4 +1,4 @@
-# qe - Library for Quantum Computing in C++
+# QE - Quantum Computing in C++
 
 You need it fast? Welcome. 
 
@@ -16,6 +16,12 @@ Here we start gathering some useful classes and algorithms for computing quantum
 The project uses CMake and can be built without any dependencies or integration into other projects. 
 However, it can also be integrated as a submodule into another CMake-based project. 
 This will prevent this library's `CMakeLists.txt` file to search for Catch2 (see below), to enable `USE_FOLDERS` and to remove the option for unit testing which will then need to be given by the top-level project. 
+
+### Requirements
+- CMake (for setup)
+- C++20 or newer
+- Note: currently, we only test on Windows (Visual Studio)
+
 
 
 ## Tests
