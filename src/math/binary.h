@@ -22,7 +22,7 @@ namespace qe {
 		constexpr friend Binary operator|(const Binary& a, const Binary& b) { return Binary{ a } |= b; }
 
 		constexpr operator int() const { return value; }
-		constexpr int toInt() const { return value; }
+		constexpr int to_int() const { return value; }
 		constexpr Binary& negate() { value = !value; return *this; }
 		constexpr Binary operator~() const { return Binary{ !value }; }
 

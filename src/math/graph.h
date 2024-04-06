@@ -6,71 +6,34 @@
 
 namespace qe {
 
-
-	template<bool empty = true>
-	struct GraphSize {
-		constexpr friend bool operator==(const GraphSize& a, const GraphSize& b) = default;
-	};
-
-
-	template<>
-	struct GraphSize<false> {
-		int n{};
-		constexpr friend bool operator==(const GraphSize& a, const GraphSize& b) = default;
-	};
-
-
-
-	template<size_t n = qe::dynamic>
 	class Graph {
 	public:
-		using AdjacencyMatrix = qe::Matrix<Binary, n, n>;
-		static constexpr bool is_dynamic = (n == qe::dynamic);
-		GraphSize<!is_dynamic> graph_size;
-
+		using AdjacencyMatrix = qe::Matrix<Binary, qe::dynamic, qe::dynamic>;
 
 		AdjacencyMatrix adjacency_matrix;
 
 
-		constexpr Graph() requires !is_dynamic = default;
 
-		explicit constexpr Graph(GraphSize<!is_dynamic> graph_size) : graph_size(graph_size) {
-			if constexpr (is_dynamic) {
-				adjacency_matrix = AdjacencyMatrix(num_vertices(), num_vertices());
-			}
-		}
+		explicit constexpr Graph(size_t num_vertices) : adjacency_matrix(num_vertices, num_vertices) {}
+		explicit constexpr Graph(int num_vertices) : adjacency_matrix(num_vertices, num_vertices) {}
 
-		explicit constexpr Graph(int num_vertices) requires is_dynamic : graph_size{ num_vertices }, adjacency_matrix(num_vertices, num_vertices) {}
-
-
-		constexpr int num_vertices() const {
-			if constexpr (is_dynamic) return graph_size.n;
-			else return n;
-		}
-
-		constexpr static auto fully_connected() requires (!is_dynamic) { return Graph{}.fully_connect(); }
-		constexpr static auto fully_connected(int n) requires (is_dynamic) { return Graph{ n }.fully_connect(); }
-
-		constexpr static auto star(int center = 0) requires (!is_dynamic) { return Graph{}.make_star(center); }
-		constexpr static auto star(int n, int center = 0) requires (is_dynamic) { return Graph{ n }.make_star(center); }
-
-		constexpr static auto linear() requires (!is_dynamic) { return Graph{}.make_linear(); }
-		constexpr static auto linear(int n) requires (is_dynamic) { return Graph{ n }.make_linear(); }
-
-		constexpr static auto cycle() requires (!is_dynamic) { return Graph{}.make_cycle(); }
-		constexpr static auto cycle(int n) requires (is_dynamic) { return Graph{ n }.make_cycle(); }
-
-		constexpr static auto pusteblume() requires (!is_dynamic) { return Graph{}.make_pusteblume(); }
-		constexpr static auto pusteblume(int n) requires (is_dynamic) { return Graph{ n }.make_pusteblume(); }
 
 		constexpr const AdjacencyMatrix& get_adjacency_matrix() const { return adjacency_matrix; }
+		constexpr int num_vertices() const { return adjacency_matrix.rows(); }
+
+		constexpr static auto fully_connected(int n) { return Graph{ n }.fully_connect(); }
+		constexpr static auto star(int n, int center = 0) { return Graph{ n }.make_star(center); }
+		constexpr static auto linear(int n) { return Graph{ n }.make_linear(); }
+		constexpr static auto cycle(int n) { return Graph{ n }.make_cycle(); }
+		constexpr static auto pusteblume(int n) { return Graph{ n }.make_pusteblume(); }
+
 
 		constexpr bool has_edge(int vertex1, int vertex2) const {
 			return adjacency_matrix(vertex1, vertex2) == 1;
 		}
 
 		constexpr int edge_count() const {
-			return std::accumulate(adjacency_matrix.begin(), adjacency_matrix.end(), 0, [](int count, Binary b) { return count + b.toInt(); }) / 2;
+			return std::accumulate(adjacency_matrix.begin(), adjacency_matrix.end(), 0, [](int count, Binary b) { return count + b.to_int(); }) / 2;
 		}
 
 		constexpr void add_edge(int vertex1, int vertex2) {
@@ -103,7 +66,7 @@ namespace qe {
 		}
 
 		constexpr void local_complementation(int vertex) {
-			qe::Vector<Binary, n> ithColumn = adjacency_matrix.col(vertex);
+			qe::Matrix<Binary, qe::dynamic, qe::dynamic> ithColumn = adjacency_matrix.col(vertex);
 			adjacency_matrix += ithColumn * ithColumn.transpose();
 			for (int i = 0; i < num_vertices(); ++i) {
 				adjacency_matrix(i, i) = 0;
@@ -111,10 +74,10 @@ namespace qe {
 		}
 
 		constexpr void swap(int vertex1, int vertex2) {
-			qe::Vector<Binary, n> col = adjacency_matrix.col(vertex1);
+			qe::Matrix<Binary, qe::dynamic, qe::dynamic> col = adjacency_matrix.col(vertex1);
 			adjacency_matrix.col(vertex1) = adjacency_matrix.col(vertex2);
 			adjacency_matrix.col(vertex2) = col;
-			qe::RowVector<Binary, n> row = adjacency_matrix.row(vertex1);
+			qe::Matrix<Binary, qe::dynamic, qe::dynamic> row = adjacency_matrix.row(vertex1);
 			adjacency_matrix.row(vertex1) = adjacency_matrix.row(vertex2);
 			adjacency_matrix.row(vertex2) = row;
 		}
@@ -130,7 +93,7 @@ namespace qe {
 		/// @param mapping Each number from 0 to num_vertices-1 needs to occur exactly once. 
 		/// @return permuted graph
 		constexpr Graph graph_isomorphism(const std::vector<int>& mapping) const {
-			Graph result;
+			Graph result(num_vertices());
 			for (int i = 0; i < num_vertices() - 1; ++i) {
 				for (int j = i + 1; j < num_vertices(); ++j) {
 					result.adjacency_matrix(mapping[i], mapping[j]) = adjacency_matrix(i, j);
@@ -146,7 +109,7 @@ namespace qe {
 
 		template<class Predicate>
 		static constexpr Graph transform(const Graph& g1, const Graph& g2, Predicate predicate) {
-			Graph result;
+			Graph result(g1.num_vertices());
 			std::transform(g1.adjacency_matrix.begin(), g1.adjacency_matrix.end(), g2.adjacency_matrix.begin(),
 				result.adjacency_matrix.begin(), predicate);
 			return result;
@@ -154,7 +117,7 @@ namespace qe {
 
 		template<class Predicate>
 		constexpr void transform(const Graph& g, Predicate predicate) {
-			Graph result;
+			Graph result(num_vertices());
 			std::transform(adjacency_matrix.begin(), adjacency_matrix.end(), g.adjacency_matrix.begin(), adjacency_matrix.begin(), predicate);
 		}
 
@@ -200,85 +163,22 @@ namespace qe {
 		constexpr friend bool operator==(const Graph& g1, const Graph& g2) = default;
 
 		/// @brief Compress the graph into a single 64-bit integer. 
-		static constexpr uint64_t compress(const Graph& graph) {
-			static_assert(n * (n - 1) / 2 <= 64 || n != qe::dynamic, "Compression is not supported for graphs of this size");
-			assert(graph.num_vertices() * (graph.num_vertices() - 1) / 2 <= 64 && "Compression is not supported for graphs of this size");
-			uint64_t code{};
-			int index{};
-			for (int i = 0; i < graph.num_vertices() - 1; ++i) {
-				for (int j = i + 1; j < graph.num_vertices(); ++j) {
-					if (graph.has_edge(i, j)) code |= (1ULL << index);
-					++index;
-				}
-			}
-			return code;
-		}
+		static uint64_t compress(const Graph& graph);
+
 
 		/// @brief Restore a graph from its compressed form. 
-		static constexpr Graph decompress(uint64_t code) requires(!is_dynamic) {
-			static_assert(n * (n - 1) / 2 <= 64, "Deompression is not supported for graphs of this size");
-			Graph graph;
-			decompress_impl(graph, code);
-			return graph;
-		}
-
-		/// @brief Restore a graph from its compressed form. 
-		static constexpr Graph decompress(int num_vertices, uint64_t code) requires(is_dynamic) {
-			assert(num_vertices * (num_vertices - 1) / 2 <= 64 && "Decompression is not supported for graphs of this size");
-			Graph graph(num_vertices);
-			decompress_impl(graph, code);
-			return graph;
-		}
+		static Graph decompress(int num_vertices, uint64_t code);
 
 		/// @brief Get connected components of the graph in form of a vector of vector of vertex indices. 
 		/// @param sort_by_size If true, the components are sorted by size (smallest to largest). 
 		/// @return Connected components of the graph
-		std::vector<std::vector<int>> connectedComponents(bool sort_by_size = false) const {
-			std::vector<std::vector<int>> components;
-
-			auto copy = adjacency_matrix;
-			auto edges = get_edges();
-			std::vector<int> remaining_vertices(num_vertices());
-			std::vector<int> visited(num_vertices());
-			std::iota(remaining_vertices.begin(), remaining_vertices.end(), 0);
-
-			for (int i = 0; i < num_vertices(); ++i) {
-				if (visited[i]) continue;
-				visited[i] = 1;
-				std::vector<int> component{ i };
-				std::vector<int> queue{ i };
-				while (!queue.empty()) {
-					auto vertex = queue.back();
-					queue.pop_back();
-					for (int k = 0; k < num_vertices(); ++k) {
-						if (has_edge(vertex, k) && visited[k] == 0) {
-							queue.push_back(k);
-							component.push_back(k);
-							visited[k] = 1;
-						}
-					}
-				}
-				components.emplace_back(std::move(component));
-			}
-			if (sort_by_size) {
-				std::ranges::sort(components, std::less{}, &std::vector<int>::size);
-			}
-			return components;
-		}
+		std::vector<std::vector<int>> connected_components(bool sort_by_size = false) const;
 
 
 
 	private:
 
-		static constexpr void decompress_impl(Graph& graph, int64_t code) {
-			int index{};
-			for (int i = 0; i < graph.num_vertices() - 1; ++i) {
-				for (int j = i + 1; j < graph.num_vertices(); ++j) {
-					if (code & (1ULL << index)) graph.add_edge(i, j);
-					++index;
-				}
-			}
-		}
+		static void decompress_impl(Graph& graph, int64_t code);
 
 		constexpr Graph& fully_connect() {
 			adjacency_matrix.fill(1);
@@ -306,87 +206,24 @@ namespace qe {
 		}
 
 		constexpr Graph& make_pusteblume() {
-			static_assert(n >= 5 || n == qe::dynamic, "The Pusteblume graph is only possible for at least 5 vertices");
 			assert(num_vertices() >= 5 && "The Pusteblume graph is only possible for at least 5 vertices");
-			for (size_t i = 1; i < 4; ++i) {
+			for (int i = 1; i < 4; ++i) {
 				add_edge(0, i);
 			}
-			for (size_t i = 4; i < num_vertices(); ++i) {
+			for (int i = 4; i < num_vertices(); ++i) {
 				add_edge(3, i);
 			}
 			return *this;
 		}
 	};
 
-
-	//     0 o--o 1
-	//        \ |
-	//         \|
-	//          o 2
-	void print_graph(const Graph<3>& graph);
+	void print_graph(const Graph& graph);
 
 
-	//     0 o--o 1
-	//       |\/|
-	//       |/\|
-	//     3 o--o 2
-	void print_graph(const Graph<4>& graph);
+	/// @brief Generate all subgraphs of given graph that have at least [min_edges] edges and at most [max_edges] edges
+	std::vector<Graph> generate_subgraphs(const Graph& graph, int min_edges, int max_edges);
 
-	//          0     1
-	//           o---o     
-	//           |   |\
-	//           |\ /|.\
-	//           | X |  o 2
-	//           |/ \|./
-	//           | . |/	
-	//           o---o	
-	//          4     3
-	void print_graph(const Graph<5>& graph);
-	//          0     1
-	//           o---o             o---o            o---o
-	//          /| . |\		      /| .		        |   /\
-	//         /.|\ /|.\	     / |\   .	        |  /  \
-	//      5 o--|-X-|--o 2     o  | \    o	     o  | /    o
-	//         \.|/ \|./	       |  \		      \ |/    /
-	//          \| . |/		       |   \	       \|    /
-	//           o---o		       o   o	        o---o
-	//          4     3
-	void print_graph(const Graph<6>& graph);
-
-	void print_graph(const Graph<qe::dynamic>& graph);
-
-
-	/// @brief Generate all subgraphs of given graph that have at least [minEdges] edges and at most [maxEdges] edges
-	template<int n>
-	std::vector<Graph<n>> generate_subgraphs(const Graph<n>& graph, int minEdges, int maxEdges) {
-		std::vector<std::pair<size_t, size_t>> edges;
-		std::vector<Graph<n>> subgraphs;
-		for (int i = 0; i < graph.num_vertices(); ++i) {
-			for (int j = i + 1; j < graph.num_vertices(); ++j) {
-				if (graph.adjacency_matrix(i, j) == 1) edges.push_back({ i,j });
-			}
-		}
-		assert(edges.size() < 64 && "this algorithm only works with less than 64 edges");
-		const auto end = 1 << edges.size();
-		for (size_t i = 0; i < end; ++i) {
-			if (const auto edge_count = std::popcount(i); edge_count < minEdges || edge_count > maxEdges) continue;
-
-			Graph<n> subgraph(graph.graph_size);
-			for (size_t j = 0; j < edges.size(); ++j) {
-				if (i & (1ULL << j)) {
-					subgraph.adjacency_matrix(edges[j].first, edges[j].second) = 1;
-					subgraph.adjacency_matrix(edges[j].second, edges[j].first) = 1;
-				}
-			}
-			subgraphs.push_back(subgraph);
-		}
-		return subgraphs;
-	}
-
-	template<int n>
-	auto generate_subgraphs(const Graph<n>& graph, int maxEdges = std::numeric_limits<int>::max()) {
-		return generate_subgraphs(graph, 0, maxEdges);
-	}
+	auto generate_subgraphs(const Graph& graph, int max_edges = std::numeric_limits<int>::max());
 
 
 }
