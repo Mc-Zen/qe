@@ -72,13 +72,13 @@ jobs:
         cmake --build build/
         
 
-    - if: ${{ matrix.os == 'windows-latest' }}
-      name: Install Catch2
+    - name: Install Catch2 (Windows)
+      if: ${{ matrix.os == 'windows-latest' }}
       run: |
         cd Catch2
         cmake --install build/ --config Debug
-    - if: ${{ matrix.os != 'windows-latest' }}
-      name: Install Catch2
+    - name: Install Catch2 (!Windows) 
+      if: ${{ matrix.os != 'windows-latest' }}
       run: |
         cd Catch2
         sudo cmake --install build/
@@ -92,6 +92,9 @@ jobs:
     #     cmake --build build/ --target install
 
     - name: Configure CMake
+      env:
+        CC: gcc-13
+        CXX: g++-13
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
