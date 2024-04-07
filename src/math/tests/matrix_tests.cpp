@@ -36,7 +36,7 @@ TEST_CASE("Dynamic Constructor with deduction guide") {
 }
 TEST_CASE("Dynamic Constructor") {
 	SECTION("Dimensions") {
-		Matrix<int> mat{ Shape{3,2} };
+		Matrix<int> mat{ Shape<false>{3,2} };
 		REQUIRE(mat.rows() == 3);
 		REQUIRE(mat.cols() == 2);
 	}
