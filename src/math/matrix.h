@@ -318,22 +318,22 @@ namespace qe {
 			}
 		}
 
-		constexpr Matrix(Index m, Index n) requires is_dynamic : data_(m* n), shape_{ m,n } {}
-		constexpr Matrix(Index m, Index n, const T& value) requires is_dynamic : data_(m* n), shape_{ m,n } {
+		constexpr Matrix(Index m_, Index n_) requires is_dynamic : data_(m_* n_), shape_{ m_,n_ } {}
+		constexpr Matrix(Index m_, Index n_, const T& value) requires is_dynamic : data_(m_* n_), shape_{ m_,n_ } {
 			fill(value);
 		}
 
-		constexpr Matrix(Index m, Index n, const std::initializer_list<T> elems) requires (is_dynamic) : Matrix(m, n) {
+		constexpr Matrix(Index m_, Index n_, const std::initializer_list<T> elems) requires (is_dynamic) : Matrix(m_, n_) {
 			size_type h = std::min(elems.size(), size());
 			std::copy(std::begin(elems), std::begin(elems) + h, begin());
 			std::fill(begin() + h, end(), T{});
 		}
 
-		constexpr Matrix(Index m, Index n, const storage_type& elems) requires is_dynamic : Matrix(m, n) {
+		constexpr Matrix(Index m_, Index n_, const storage_type& elems) requires is_dynamic : Matrix(m_, n_) {
 			std::copy(std::begin(elems), std::end(elems), begin());
 		}
 
-		constexpr Matrix(Index m, Index n, storage_type&& elems) noexcept requires is_dynamic : shape_{ m,n }, data_{ std::move(elems) } {
+		constexpr Matrix(Index m_, Index n_, storage_type&& elems) noexcept requires is_dynamic : shape_{ m_,n_ }, data_{ std::move(elems) } {
 			data_.resize(size());
 		}
 
@@ -370,15 +370,15 @@ namespace qe {
 		constexpr void swap(Matrix& a) noexcept { data_.swap(a.data_); }
 
 
-		constexpr void resize(Index m, Index n) requires (is_dynamic) {
-			shape_ = { m,n };
+		constexpr void resize(Index m_, Index n_) requires (is_dynamic) {
+			shape_ = { m_,n_ };
 			data_.resize(size());
 		}
 
 		// Note: the behaviour is undefined if the m*n != size()
-		constexpr void reshape(Index m, Index n) requires (is_dynamic) {
-			MATRIX_VERIFY(m * n == size(), "The new shape results in a different size than before", Matrix_shape_error);
-			shape_ = { m,n };
+		constexpr void reshape(Index m_, Index n_) requires (is_dynamic) {
+			MATRIX_VERIFY(m_ * n_ == size(), "The new shape results in a different size than before", Matrix_shape_error);
+			shape_ = { m_,n_ };
 		}
 
 		// Note: the behaviour is undefined if the m*n != size()
@@ -596,11 +596,11 @@ namespace qe {
 		//
 
 		constexpr static Matrix zero() requires (!is_dynamic) { return Matrix(); }
-		constexpr static Matrix zero(Index m, Index n) requires (is_dynamic) { return Matrix(m, n, 0); }
+		constexpr static Matrix zero(Index m_, Index n_) requires (is_dynamic) { return Matrix(m_, n_, 0); }
 
-		constexpr static Matrix identity(Index n) requires (is_dynamic) {
-			Matrix mat(n, n);
-			for (size_type i = 0; i < n; ++i) mat(i, i) = T(1);
+		constexpr static Matrix identity(Index n_) requires (is_dynamic) {
+			Matrix mat(n_, n_);
+			for (size_type i = 0; i < n_; ++i) mat(i, i) = T(1);
 			return mat;
 		}
 

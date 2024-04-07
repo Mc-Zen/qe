@@ -2,6 +2,7 @@
 #pragma once
 #include "matrix.h"
 #include "binary.h"
+#include <cstdint>
 
 
 namespace qe {

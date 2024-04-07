@@ -7,7 +7,6 @@
 
 #include <iostream>
 
-
 using Catch::Approx;
 using namespace qe;
 
@@ -580,10 +579,10 @@ TEST_CASE("VectorInnerProduct") {
 TEST_CASE("VectorDistance") {
 	Vector<float, 3> vec1{ 0, 0, 0 };
 	Vector<float, 3> vec2{ 2, 2, 2 };
-	REQUIRE(distance(vec1, vec2) == Approx(std::sqrtf(12.f)));
+	REQUIRE(distance(vec1, vec2) == Approx(std::sqrt(12.f)));
 	RowVector<float, 3> rvec1{ 0, 0, 0 };
 	RowVector<float, 3> rvec2{ 2, 2, 2 };
-	REQUIRE(distance(rvec1, rvec2) == Approx(std::sqrtf(12.f)));
+	REQUIRE(distance(rvec1, rvec2) == Approx(std::sqrt(12.f)));
 }
 
 TEST_CASE("Matrix1x1CastToT") {
