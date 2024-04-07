@@ -1,6 +1,6 @@
 # This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
-name: tests
+name: Continuous Integration
 
 on:
   push:
@@ -9,7 +9,20 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  # checks: 
+  #   name: Check formatting
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Run clang-format style check for C/C++/Protobuf programs.
+  #     uses: jidicula/clang-format-action@v4.11.0
+  #     with:
+  #       clang-format-version: '13'
+  #       check-path: 'src'
+  #       # fallback-style: 'Mozilla' # optional
+
+  tests:
+    name: Tests
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -23,8 +36,7 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        # os: [windows-latest]
-        # os: [windows-latest, ubuntu-latest]
+        # os: [windows-latest, ubuntu-latest, macos-latest]
         build_type: [Debug]
         include:
           # - os: windows-latest

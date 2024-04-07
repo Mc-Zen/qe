@@ -80,7 +80,7 @@ std::string qe::Circuit::draw() const {
 		auto t2 = get_track_index(q2);
 
 
-		auto max_track_len = std::max_element(tracks.begin() + t1, tracks.begin() + t2 + 1, [](const auto& a, const auto& b) {return a.size() < b.size(); })->length();
+		auto max_track_len = std::max_element(tracks.begin() + t1, tracks.begin() + t2 + 1, [](const auto& a, const auto& b) { return a.size() < b.size(); })->length();
 
 		for (int track = t1; track <= t2; ++track) {
 			tracks[track] += std::string(max_track_len - tracks[track].length(), track & 1 ? ' ' : '-');
@@ -103,8 +103,7 @@ std::string qe::Circuit::draw() const {
 					tracks[i] += i & 1 ? ' ' : '-';
 				}
 			}
-		}
-		else if (gate.type == GateType::Other) {
+		} else if (gate.type == GateType::Other) {
 
 			tracks[t1] += "|==|";
 			for (int i = t1 + 1; i < t2; ++i) {
@@ -119,7 +118,9 @@ std::string qe::Circuit::draw() const {
 
 
 
-	auto max_track_len = std::ranges::max(tracks, {}, &std::string::length).length();
+	auto max_track_len = std::max_element(tracks.begin(), tracks.end(), [](const auto& a, const auto& b) {
+		return a.length() < b.length();
+	})->length();
 
 	for (int qubit = 0; qubit < num_qubits; ++qubit) {
 		auto& track = get_track(qubit);
@@ -134,4 +135,3 @@ std::string qe::Circuit::draw() const {
 	}
 	return result;
 }
-
