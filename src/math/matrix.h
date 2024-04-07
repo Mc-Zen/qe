@@ -689,7 +689,7 @@ namespace qe {
 
 	template<class T>
 	constexpr Matrix<T, dynamic, dynamic> diag(const std::initializer_list<T>& values) {
-		Matrix<T> result{ Shape{values.size(), values.size()} };
+		Matrix<T> result{ Shape<false>{ values.size(), values.size() } };
 		Index i{};
 		for (const auto& value : values) {
 			result(i, i) = value;
@@ -731,7 +731,7 @@ namespace qe {
 	template<class T>
 	constexpr Matrix<T, dynamic, dynamic> antidiag(const std::initializer_list<T>& values) {
 		const auto n = values.size();
-		Matrix<T> result{ Shape{n,n} };
+		Matrix<T> result{ Shape<false>{ n, n } };
 		Index i{};
 		for (const auto& value : values) {
 			result(n - i - 1, i) = value;
