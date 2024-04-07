@@ -77,7 +77,7 @@ jobs:
     - name: Install Catch2
       run: |
         cd Catch2
-        cmake --install .
+        cmake --install build/
 
 
     # - name: Install Catch2
