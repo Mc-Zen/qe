@@ -1,4 +1,3 @@
-#pragma once
 #include <vector>
 #include <sstream>
 #include <algorithm>
@@ -60,7 +59,7 @@ namespace Q {
 
 	std::vector<std::string> split_once(const std::string& s, char delim) {
 		std::vector<std::string> strings;
-		if (auto result = std::ranges::find(s, delim); result != s.end()) {
+		if (auto result = std::find(s.begin(), s.end(), delim); result != s.end()) {
 			strings.emplace_back(s.begin(), result);
 			strings.emplace_back(result + 1, s.end());
 			return strings;

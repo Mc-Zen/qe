@@ -2,6 +2,7 @@
 #pragma once
 #include "matrix.h"
 #include "binary.h"
+#include <cstdint>
 
 
 namespace qe {
@@ -85,7 +86,7 @@ namespace qe {
 		/// @brief Perform a series of local complementations
 		/// @param vertices Local complementations will be executed for vertices in the given order
 		constexpr void local_complementation(const std::initializer_list<int>& vertices) {
-			std::ranges::for_each(vertices, [this](int vertex) { local_complementation(vertex); });
+			std::for_each(vertices.begin(), vertices.end(), [this](int vertex) { local_complementation(vertex); });
 		}
 
 

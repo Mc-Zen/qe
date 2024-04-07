@@ -1,5 +1,6 @@
 ﻿#include "graph.h"
 #include <iostream>
+#include <bit>
 
 using namespace qe;
 
@@ -95,7 +96,8 @@ std::vector<std::vector<int>> qe::Graph::connected_components(bool sort_by_size)
 		components.emplace_back(std::move(component));
 	}
 	if (sort_by_size) {
-		std::ranges::sort(components, std::less{}, &std::vector<int>::size);
+		//std::ranges::sort(components, std::less{}, &std::vector<int>::size);
+		std::sort(components.begin(), components.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); });
 	}
 	return components;
 }
