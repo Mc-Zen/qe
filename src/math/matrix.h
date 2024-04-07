@@ -445,8 +445,8 @@ namespace qe {
 
 		template<class OtherScalar, class ResultScalar, size_type p>
 		constexpr friend Matrix<T, m, p> operator*(const Matrix<T, m, n>& a, const Matrix<OtherScalar, n, p>& b) {
-			MATRIX_VERIFY(this->cols() == a.rows(), "Cannot multipliy matrices with non-matching dimensions", Matrix_shape_error);
-			Matrix<ResultScalar, m, p> result(this->shape() * a.shape());
+			MATRIX_VERIFY(a.cols() == b.rows(), "Cannot multipliy matrices with non-matching dimensions", Matrix_shape_error);
+			Matrix<ResultScalar, m, p> result(a.shape() * b.shape());
 
 			for (size_type i = 0; i < a.rows(); ++i) {
 				for (size_type j = 0; j < b.cols(); ++j) {
