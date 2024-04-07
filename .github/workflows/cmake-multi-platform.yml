@@ -75,7 +75,7 @@ jobs:
     - name: Install Catch2
       run: |
         cd Catch2
-        cmake --install build/ --config Debug
+        ${{ matrix.os == 'windows-latest' && '' || 'sudo' }} cmake --install build/ --config Debug --prefix 
 
 
     # - name: Install Catch2
