@@ -15,7 +15,7 @@
 #ifdef MATRIX_EXCEPTIONS
 #define MATRIX_VERIFY(expr, msg, exception) if(!(expr)) throw exception(msg)
 #else
-#define MATRIX_VERIFY(expr, msg, exception) assert((msg, expr))
+#define MATRIX_VERIFY(expr, msg, exception) assert(msg && expr)
 #endif
 
 namespace qe {
@@ -445,8 +445,8 @@ namespace qe {
 
 		template<class OtherScalar, class ResultScalar, size_type p>
 		constexpr friend Matrix<T, m, p> operator*(const Matrix<T, m, n>& a, const Matrix<OtherScalar, n, p>& b) {
-			MATRIX_VERIFY(cols() == a.rows(), "Cannot multipliy matrices with non-matching dimensions", Matrix_shape_error);
-			Matrix<ResultScalar, m, p> result(shape() * a.shape());
+			MATRIX_VERIFY(this->cols() == a.rows(), "Cannot multipliy matrices with non-matching dimensions", Matrix_shape_error);
+			Matrix<ResultScalar, m, p> result(this->shape() * a.shape());
 
 			for (size_type i = 0; i < a.rows(); ++i) {
 				for (size_type j = 0; j < b.cols(); ++j) {
