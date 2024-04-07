@@ -27,15 +27,15 @@ jobs:
         # os: [windows-latest, ubuntu-latest]
         build_type: [Debug]
         include:
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
-          - os: ubuntu-latest
-            c_compiler: gcc-13
-            cpp_compiler: g++-13
+          # - os: windows-latest
+          #   c_compiler: cl
+          #   cpp_compiler: cl
           # - os: ubuntu-latest
-          #   c_compiler: clang
-          #   cpp_compiler: clang++
+          #   c_compiler: gcc-13
+          #   cpp_compiler: g++-13
+          - os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
         # exclude:
         #   - os: windows-latest
         #     c_compiler: gcc
