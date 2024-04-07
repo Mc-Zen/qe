@@ -21,7 +21,17 @@ This will prevent this library's `CMakeLists.txt` file to search for Catch2 (see
 - CMake (for setup)
 - C++20 or newer
 - (optional) Gurobi 10.0.0 or newer. Necessary for some projects. Note that Gurobi is proprietary software. 
-- Note: currently, we only test on Windows (Visual Studio)
+
+### Supported Platforms
+Since this repository uses C++20 language features, a fairly new C++ compiler is necessary. 
+
+|Platform | Compiler   | Minimum version |
+|---------|------------|-----------------|
+|Windows  | MSVC       | 14.30           |
+|Linux    | GCC        | 13              |
+|         | Clang      | 15              |
+|MacOS    | AppleClang | 15              |
+
 
 ### Setting up Gurobi (optional)
 Gurobi is a numerical solver that is used in some of the projects of **QE**. In order to enable these projects, set `QE_ENABLE_GUROBI` to `ON` in the CMake GUI or run CMAKE wih the flag `-DQE_ENABLE_GUROBI=ON` when building the project. Ensure to have Gurobi installed and licensed. When installed in the default place, the CMake script should be able to find Gurobi automatically. If not, contact us (for now). 
