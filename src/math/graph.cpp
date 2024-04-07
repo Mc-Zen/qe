@@ -1,5 +1,6 @@
 ﻿#include "graph.h"
 #include <iostream>
+#include <bit>
 
 using namespace qe;
 
