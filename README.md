@@ -38,6 +38,9 @@ Since this repository uses C++20 language features, a fairly new C++ compiler is
 Gurobi is a numerical solver that is used in some of the projects of **QE**. In order to enable these projects, set `QE_ENABLE_GUROBI` to `ON` in the CMake GUI or run CMAKE wih the flag `-DQE_ENABLE_GUROBI=ON` when building the project. Ensure to have Gurobi installed and licensed. When installed in the default place, the CMake script should be able to find Gurobi automatically. If not, contact us (for now). 
 
 
+## Contributing
+
+Contributions to the codebase are welcome. Please look into the [Contributing Guide](/docs/contributing.md) and feel free to open a pull request. 
 
 ## Tests
 
@@ -46,13 +49,7 @@ The unit tests can be built by setting `UNIT_TESTING=ON` when running CMake or r
 Ensure that you have Catch2 installed and that it can be found in CMake by `find_package(Catch2 3 REQUIRED)`. 
 If folders in the IDE are enabled, the tests are put into a folder named `Unit Tests`. 
 
-When writing own unit tests,
-- write one `.cpp` test file per library header file
-- whose name is based on the header file and ends on `_tests`,
-- pay attention to test every function and feature and
-- put the test files into a directory named `tests` next to the libraries `src` directory.
-
-In general, each source file should have a test file (except where similar files can be tested more easily in one unit).
+See [here](docs/contributing.md#unit-tests) for more information on how to add unit tests. 
 
 ## License
 
