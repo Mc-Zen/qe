@@ -4,7 +4,11 @@
 
 using namespace qe;
 
-
+qe::Graph::Graph(int num_vertices, const std::initializer_list<std::pair<int, int>>& edges) : Graph(num_vertices) {
+	std::for_each(edges.begin(), edges.end(), [this](const auto& edge) {
+		add_edge(edge.first, edge.second);
+	});
+}
 
 void qe::print_graph(const Graph& graph) {
 	using std::cout;
@@ -138,6 +142,6 @@ std::vector<Graph> qe::generate_subgraphs(const Graph& graph, int min_edges, int
 	return subgraphs;
 }
 
-auto qe::generate_subgraphs(const Graph& graph, int max_edges) {
+std::vector<Graph> qe::generate_subgraphs(const Graph& graph, int max_edges) {
 	return generate_subgraphs(graph, 0, max_edges);
 }

@@ -17,6 +17,7 @@ namespace qe {
 
 		explicit constexpr Graph(size_t num_vertices) : adjacency_matrix(num_vertices, num_vertices) {}
 		explicit constexpr Graph(int num_vertices) : adjacency_matrix(num_vertices, num_vertices) {}
+		Graph(int num_vertices, const std::initializer_list<std::pair<int, int>>& edges);
 
 
 		constexpr const AdjacencyMatrix& get_adjacency_matrix() const { return adjacency_matrix; }
@@ -224,7 +225,6 @@ namespace qe {
 	/// @brief Generate all subgraphs of given graph that have at least [min_edges] edges and at most [max_edges] edges
 	std::vector<Graph> generate_subgraphs(const Graph& graph, int min_edges, int max_edges);
 
-	auto generate_subgraphs(const Graph& graph, int max_edges = std::numeric_limits<int>::max());
-
+	std::vector<Graph> generate_subgraphs(const Graph& graph, int max_edges = std::numeric_limits<int>::max());
 
 }
