@@ -1,4 +1,5 @@
 # QE - Quantum Computing in C++
+[![CI](https://github.com/Mc-Zen/qe/actions/workflows/ci.yml/badge.svg)](https://github.com/Mc-Zen/qe/actions/workflows/ci.yml)
 
 You need it fast? Welcome. 
 

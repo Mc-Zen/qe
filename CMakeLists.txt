@@ -12,6 +12,7 @@ project(qe)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(cmake/add_unit_test.cmake)
+include(cmake/add_qe_library.cmake)
 
 
 set(QE_LIBRARY_IDE_FOLDER "QE")
