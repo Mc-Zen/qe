@@ -5,7 +5,7 @@ add_qe_library(${target}
 	solve.cpp
 )
 target_link_libraries(${target} PUBLIC gurobi_cpp)
-target_link_libraries(${target} PRIVATE base math utility)
+target_link_libraries(${target} PUBLIC base math utility)
 
 add_unit_test(${target}_unit_tests
 	SOURCES 
