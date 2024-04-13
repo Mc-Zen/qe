@@ -6,7 +6,7 @@ add_qe_library(${target}
 	circuit.cpp
 )
 
-target_link_libraries(${target} PRIVATE math utility)
+target_link_libraries(${target} PUBLIC math utility)
 
 add_unit_test(${target}_unit_tests
 	SOURCES 
