@@ -17,6 +17,13 @@ qe::Pauli Pauli::Single_Z(int num_qubits, int qubit) {
 	return pauli;
 }
 
+qe::Pauli Pauli::Single_Y(int num_qubits, int qubit) {
+	Pauli pauli(num_qubits);
+	pauli.set_x(qubit, 1);
+	pauli.set_z(qubit, 1);
+	return pauli;
+}
+
 void qe::Pauli::from_pauli_string(std::string_view pauli_string) {
 	assert(pauli_string.length() > 0 && "A Pauli string cannot be empty");
 
