@@ -5,13 +5,13 @@ using namespace qe;
 
 
 
-static qe::Pauli Single_X(int num_qubits, int qubit) {
+qe::Pauli Pauli::Single_X(int num_qubits, int qubit) {
 	Pauli pauli(num_qubits);
 	pauli.set_x(qubit, 1);
 	return pauli;
 }
 
-static qe::Pauli Single_Z(int num_qubits, int qubit) {
+qe::Pauli Pauli::Single_Z(int num_qubits, int qubit) {
 	Pauli pauli(num_qubits);
 	pauli.set_z(qubit, 1);
 	return pauli;

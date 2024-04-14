@@ -2,8 +2,9 @@ set(target base)
 
 add_qe_library(${target}
 	circuit.h
-	pauli.h
 	circuit.cpp
+	pauli.h
+	pauli.cpp
 )
 
 target_link_libraries(${target} PUBLIC math utility)

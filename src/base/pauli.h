@@ -1,10 +1,9 @@
 ﻿
 #pragma once
 #include <cstddef>
-#include <vector>
-#include <string_view>
-#include <format>
 #include <string>
+#include <string_view>
+#include <vector>
 
 #include "binary.h"
 #include "binary_phase.h"
@@ -37,10 +36,9 @@ public:
 
 	friend bool operator==(const Pauli& a, const Pauli& b) = default;
 
-	std::string to_string(bool add_phase=true) const;
+	std::string to_string(bool add_phase = true) const;
 
 private:
-
 	void from_pauli_string(std::string_view pauli_string);
 	void from_phaseless_pauli_string(std::string_view pauli_string);
 	int count_Y_paulis() const;
@@ -55,12 +53,3 @@ class FPauli {};
 
 } // namespace qe
 
-
-
-template <class CharT>
-struct std::formatter<qe::Pauli, CharT> : std::formatter<std::string_view, CharT> {
-	template <class FormatContext>
-	auto format(const qe::Pauli& pauli, FormatContext& fc) const {
-		return std::format_to(fc.out(), "{}", pauli.to_string());
-	}
-};

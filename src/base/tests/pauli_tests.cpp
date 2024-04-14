@@ -38,12 +38,20 @@ TEST_CASE("Pauli set X/Z") {
 	REQUIRE(p.z(0) == 1);
 }
 
+TEST_CASE("Pauli SingleX") {
+	REQUIRE(Pauli::Single_X(3, 1).to_string() == "+IXI");
+}
+
+TEST_CASE("Pauli SingleZ") {
+	REQUIRE(Pauli::Single_Z(3, 1).to_string() == "+IZI");
+}
+
 TEST_CASE("Format Paulis") {
-	REQUIRE(std::format("{}", Pauli{ "iXYYZ" }) == "iXYYZ");
-	REQUIRE(std::format("{}", Pauli{ "X" }) == "+X");
-	REQUIRE(std::format("{}", Pauli{ "+X" }) == "+X");
-	REQUIRE(std::format("{}", Pauli{ "iX" }) == "iX");
-	REQUIRE(std::format("{}", Pauli{ "-iIX" }) == "-iIX");
-	REQUIRE(std::format("{}", Pauli{ "-IY" }) == "-IY");
-	REQUIRE(std::format("{}", Pauli{ "-IYY" }) == "-IYY");
+	REQUIRE(Pauli{ "iXYYZ" }.to_string() == "iXYYZ");
+	REQUIRE(Pauli{ "X" }.to_string() == "+X");
+	REQUIRE(Pauli{ "+X" }.to_string() == "+X");
+	REQUIRE(Pauli{ "iX" }.to_string() == "iX");
+	REQUIRE(Pauli{ "-iIX" }.to_string() == "-iIX");
+	REQUIRE(Pauli{ "-IY" }.to_string() == "-IY");
+	REQUIRE(Pauli{ "-IYY" }.to_string() == "-IYY");
 }
