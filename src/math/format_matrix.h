@@ -4,7 +4,7 @@
 #include "fmt/format.h"
 
 
-template <class T, int m, int n>
+template <class T, qe::Index m, qe::Index n>
 struct fmt::formatter<qe::Matrix<T, m, n>> : nested_formatter<T> {
 	using Parent = nested_formatter<T>;
 
