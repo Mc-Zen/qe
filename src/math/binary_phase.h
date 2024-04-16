@@ -1,8 +1,4 @@
-﻿
-#pragma once
-#include <string>
-#include <array>
-
+﻿#pragma once
 
 namespace qe {
 
@@ -21,10 +17,7 @@ namespace qe {
 
 		constexpr BinaryPhase& operator++() { return *this += 1; }
 		constexpr BinaryPhase& operator--() { return *this += 3; }
-		constexpr unsigned int operator()() const { return phase; }
 		constexpr unsigned int to_int() const { return phase; }
-
-		std::string to_string() const { static constexpr std::array<std::string_view, 4> c{ "+","i","-","-i" };  return std::string(c[phase]); }
 
 		constexpr bool is_real() const { return (phase & 1) == 0; }
 		constexpr friend bool operator==(const BinaryPhase& a, const BinaryPhase& b) = default;
@@ -35,5 +28,3 @@ namespace qe {
 	};
 
 }
-
-

@@ -515,7 +515,7 @@ namespace qe {
 		}
 
 
-		friend std::ostream& operator<<(std::ostream& os, const Matrix& a) {
+	/*	friend std::ostream& operator<<(std::ostream& os, const Matrix& a) {
 			std::vector<size_type> col_widths(a.cols());
 			os << std::setfill(' ');
 			for (size_type j = 0; j < a.cols(); ++j) {
@@ -540,7 +540,7 @@ namespace qe {
 			}
 			os.width(0);
 			return os << "\n";
-		}
+		}*/
 
 
 		//
