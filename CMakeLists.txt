@@ -36,7 +36,7 @@ if (UNIT_TESTING)
 	include(Catch)
 endif()
 
-
+add_subdirectory(libs)
 add_subdirectory(src)
 
 set(target qe)
