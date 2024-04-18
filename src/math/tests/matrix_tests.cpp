@@ -1,9 +1,10 @@
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/catch_approx.hpp"
 
 
 #define MATRIX_EXCEPTIONS
 #include "matrix.h"
+#include "format_matrix.h"
 
 #include <iostream>
 
@@ -11,16 +12,16 @@ using Catch::Approx;
 using namespace qe;
 
 
-template<std::random_access_iterator It>
+template <std::random_access_iterator It>
 void checkRandomAccessIterator(It) {
 }
 
 
-template<std::bidirectional_iterator It>
+template <std::bidirectional_iterator It>
 void checkBirectionalIterator(It) {
 }
 
-template<class T, Index m, Index n>
+template <class T, Index m, Index n>
 void testSizeImpl() {
 	Matrix<float, m, n> mat;
 	REQUIRE(m == mat.rows());
@@ -30,26 +31,26 @@ void testSizeImpl() {
 
 
 TEST_CASE("Dynamic Constructor with deduction guide") {
-	Matrix mat{ 1,2,{4,5,6} };
+	Matrix mat{ 1, 2, { 4, 5, 6 } };
 	static_assert(std::same_as<decltype(mat)::value_type, int>);
 	REQUIRE(mat(0, 0) == 4);
 }
 TEST_CASE("Dynamic Constructor") {
 	SECTION("Dimensions") {
-		Matrix<int> mat{ Shape<false>{3,2} };
+		Matrix<int> mat{ Shape<false>{ 3, 2 } };
 		REQUIRE(mat.rows() == 3);
 		REQUIRE(mat.cols() == 2);
 	}
 
 	SECTION("m,n") {
-		Matrix<int> mat{ 3,2 };
+		Matrix<int> mat{ 3, 2 };
 		REQUIRE(mat.rows() == 3);
 		REQUIRE(mat.cols() == 2);
 	}
 
 
 	SECTION("Value") {
-		Matrix<int> mat{ 3,2,4 };
+		Matrix<int> mat{ 3, 2, 4 };
 		REQUIRE(mat.rows() == 3);
 		REQUIRE(mat.cols() == 2);
 		REQUIRE(mat(0, 0) == 4);
@@ -57,7 +58,7 @@ TEST_CASE("Dynamic Constructor") {
 
 
 	SECTION("Initializer list") {
-		Matrix<int> mat{ 3,2, {3,4,5,6} };
+		Matrix<int> mat{ 3, 2, { 3, 4, 5, 6 } };
 		REQUIRE(mat.rows() == 3);
 		REQUIRE(mat.cols() == 2);
 		REQUIRE(mat(0, 0) == 3);
@@ -71,7 +72,7 @@ TEST_CASE("Dynamic Constructor") {
 
 	SECTION("vector copy") {
 		std::vector<int> data{ 3, 4, 5, 6 };
-		Matrix<int> mat{ 3,2, data };
+		Matrix<int> mat{ 3, 2, data };
 		REQUIRE(mat.rows() == 3);
 		REQUIRE(mat.cols() == 2);
 		REQUIRE(mat(0, 0) == 3);
@@ -84,7 +85,7 @@ TEST_CASE("Dynamic Constructor") {
 
 	SECTION("vector move") {
 		std::vector<int> data{ 3, 4, 5, 6 };
-		Matrix<int> mat{ 3,2,  std::move(data) };
+		Matrix<int> mat{ 3, 2, std::move(data) };
 		REQUIRE(mat.rows() == 3);
 		REQUIRE(mat.cols() == 2);
 		REQUIRE(mat(0, 0) == 3);
@@ -97,7 +98,7 @@ TEST_CASE("Dynamic Constructor") {
 
 
 	SECTION("From Matrix view") {
-		Matrix<int> mat{ 4,5,2 };
+		Matrix<int> mat{ 4, 5, 2 };
 		Matrix mat2 = mat.row(2);
 		REQUIRE(mat2.rows() == 1);
 		REQUIRE(mat2.cols() == 5);
@@ -107,21 +108,19 @@ TEST_CASE("Dynamic Constructor") {
 		REQUIRE(mat(0, 3) == 2);
 		REQUIRE(mat(0, 4) == 2);
 	}
-
 }
 
 
 TEST_CASE("Dynamic arithmetic") {
-	Matrix<int> a{ 2,3 };
-	Matrix<int> b{ 2,3 };
+	Matrix<int> a{ 2, 3 };
+	Matrix<int> b{ 2, 3 };
 	a + b;
 	b.resize(2, 4);
 
 	bool exceptionHappened{ false };
 	try {
 		a + b;
-	}
-	catch (Matrix_shape_error&) {
+	} catch (Matrix_shape_error&) {
 		exceptionHappened = true;
 	}
 	REQUIRE(exceptionHappened);
@@ -131,8 +130,7 @@ TEST_CASE("Dynamic arithmetic") {
 	exceptionHappened = false;
 	try {
 		a* b;
-	}
-	catch (Matrix_shape_error&) {
+	} catch (Matrix_shape_error&) {
 		exceptionHappened = true;
 	}
 	REQUIRE(exceptionHappened);
@@ -140,22 +138,21 @@ TEST_CASE("Dynamic arithmetic") {
 
 
 TEST_CASE("Dynamic transpose") {
-	Matrix<int> a{ 2,3 };
+	Matrix<int> a{ 2, 3 };
 	a = a.transpose();
 	REQUIRE(a.rows() == 3);
 	REQUIRE(a.cols() == 2);
 }
 
 TEST_CASE("Dynamic dot product") {
-	Matrix<int> a{ 2,1, {3,4} };
-	Matrix<int> b{ 2,1, {6,7} };
+	Matrix<int> a{ 2, 1, { 3, 4 } };
+	Matrix<int> b{ 2, 1, { 6, 7 } };
 	REQUIRE(a.dot(b) == 18 + 28);
 	b.resize(2, 2);
 	bool exceptionHappened{ false };
 	try {
 		a.dot(b);
-	}
-	catch (Matrix_shape_error&) {
+	} catch (Matrix_shape_error&) {
 		exceptionHappened = true;
 	}
 	REQUIRE(exceptionHappened);
@@ -164,7 +161,7 @@ TEST_CASE("Dynamic dot product") {
 
 TEST_CASE("Dynamic diag") {
 	SECTION("Vector") {
-		Matrix vec(4, 1, { 3,4,2,1 });
+		Matrix vec(4, 1, { 3, 4, 2, 1 });
 		auto mat = diag(vec);
 		REQUIRE(mat.rows() == 4);
 		REQUIRE(mat.cols() == 4);
@@ -175,7 +172,7 @@ TEST_CASE("Dynamic diag") {
 	}
 
 	SECTION("Initializer list") {
-		auto mat = diag({ 3,4,2,1 });
+		auto mat = diag({ 3, 4, 2, 1 });
 		REQUIRE(mat.rows() == 4);
 		REQUIRE(mat.cols() == 4);
 		REQUIRE(mat(0, 0) == 3);
@@ -188,7 +185,7 @@ TEST_CASE("Dynamic diag") {
 
 TEST_CASE("Dynamic antidiag") {
 	SECTION("Vector") {
-		Matrix vec(4, 1, { 3,4,2,1 });
+		Matrix vec(4, 1, { 3, 4, 2, 1 });
 		auto mat = antidiag(vec);
 		REQUIRE(mat.rows() == 4);
 		REQUIRE(mat.cols() == 4);
@@ -199,7 +196,7 @@ TEST_CASE("Dynamic antidiag") {
 	}
 
 	SECTION("Initializer list") {
-		auto mat = antidiag({ 3,4,2,1 });
+		auto mat = antidiag({ 3, 4, 2, 1 });
 		REQUIRE(mat.rows() == 4);
 		REQUIRE(mat.cols() == 4);
 		REQUIRE(mat(3, 0) == 3);
@@ -335,8 +332,7 @@ TEST_CASE("MatrixViewConstructor") {
 	bool exceptionHappened{ false };
 	try {
 		Vector<float, 3> vec1{ mat.col(1) };
-	}
-	catch (Matrix_block_domain_error&) {
+	} catch (Matrix_block_domain_error&) {
 		exceptionHappened = true;
 	}
 	REQUIRE(exceptionHappened);
@@ -399,8 +395,7 @@ TEST_CASE("AtAccessOperatorBoundsException") {
 	bool exceptionHappened{ false };
 	try {
 		mat.at(3, 12);
-	}
-	catch (std::out_of_range&) {
+	} catch (std::out_of_range&) {
 		exceptionHappened = true;
 	}
 	REQUIRE(exceptionHappened == true);
@@ -439,11 +434,7 @@ TEST_CASE("ReverseIterator") {
 }
 
 TEST_CASE("ColIterator") {
-	Matrix<float, 3, 4> mat{
-		0, 3, 6, 9,
-		1, 4, 7, 10,
-		2, 5, 8, 11
-	};
+	Matrix<float, 3, 4> mat{ 0, 3, 6, 9, 1, 4, 7, 10, 2, 5, 8, 11 };
 	float count = 0;
 	for (Index col = 0; col < mat.cols(); col++) {
 		for (auto it = mat.col_begin(col); it != mat.col_end(col); it++) {
@@ -453,11 +444,7 @@ TEST_CASE("ColIterator") {
 }
 
 TEST_CASE("RowIterator") {
-	Matrix<float, 3, 4> mat{
-		0, 1, 2, 3,
-		4, 5, 6, 7,
-		8, 9, 10, 11
-	};
+	Matrix<float, 3, 4> mat{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 	float count = 0;
 	for (Index row = 0; row < mat.rows(); row++) {
 		for (auto it = mat.row_begin(row); it != mat.row_end(row); it++) {
@@ -667,7 +654,7 @@ TEST_CASE("MatrixView") {
 	Matrix<float, 4, 4> mat2(3);
 
 	mat1.block(1, 2, 2, 3) = mat2.block(1, 1, 2, 3);
-	std::cout << mat1 << "\n";
+	// std::cout << mat1 << "\n";
 	for (size_t i = 0; i < mat1.rows(); ++i) {
 		for (size_t j = 0; j < mat1.cols(); ++j) {
 			REQUIRE(mat1(i, j) == ((i > 0 && i < 3 && j > 1 && j < 5) ? 3.f : 1.f));
@@ -685,8 +672,8 @@ TEST_CASE("MatrixView") {
 	mat2.row(3) = mat2.row(2);
 
 
-	std::cout << mat1 << "\n";
-	std::cout << mat2 << "\n";
+	// std::cout << mat1 << "\n";
+	// std::cout << mat2 << "\n";
 }
 
 TEST_CASE("CopyBlockToMatrix") {
@@ -698,8 +685,7 @@ TEST_CASE("CopyBlockToMatrix") {
 	bool exceptionHappened{ false };
 	try {
 		mat2 = mat1.block(0, 0, 4, 3);
-	}
-	catch (std::exception&) {
+	} catch (std::exception&) {
 		exceptionHappened = true;
 	}
 	REQUIRE(exceptionHappened);
@@ -714,8 +700,7 @@ TEST_CASE("CopyMatrixToBlock") {
 	bool exceptionHappened{ false };
 	try {
 		mat.block(1, 0, 4, 4) = Matrix<float, 3, 3>::zero();
-	}
-	catch (std::exception&) {
+	} catch (std::exception&) {
 		exceptionHappened = true;
 	}
 	REQUIRE(exceptionHappened);
@@ -725,7 +710,16 @@ TEST_CASE("HadamardProduct") {
 	Matrix<int, 2, 3> mat1{ 1, 2, 3, 4, 5, 6 };
 	Matrix<int, 2, 3> mat2{ 23, -3, 4, 55, 622, 73 };
 	auto prod = hadamard(mat1, mat2);
-	for (auto it1 = mat1.begin(), it2 = mat2.begin(), it3 = prod.begin(); it1 != mat1.end(); ++it1, ++it2, ++it3) {
+	for (auto it1 = mat1.begin(), it2 = mat2.begin(), it3 = prod.begin(); it1 != mat1.end();
+		 ++it1, ++it2, ++it3)
+	{
 		REQUIRE((*it1) * (*it2) == *it3);
 	}
+}
+
+
+
+TEST_CASE("Format Matrix") {
+	Matrix<float, 1, 3> mat{ 3.2f, 3, 5 };
+	REQUIRE(fmt::format("{}", mat) == "| 3.2 3 5 |\n");
 }
